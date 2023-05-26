@@ -1,0 +1,30 @@
+name: Ortto to Google Sheets Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This will run the action every day at midnight
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run script
+      run: node index.js
+      env:
+        ORTTO_API_KEY: ${{ secrets.ORTTO_API_KEY }}
+        ORTTO_API_ENDPOINT: ${{ secrets.ORTTO_API_ENDPOINT }}
+        SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        SHEET_RANGE: ${{ secrets.SHEET_RANGE }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
